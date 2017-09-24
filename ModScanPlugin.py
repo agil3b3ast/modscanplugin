@@ -1,3 +1,4 @@
+from preludecorrelator.pluginmanager import Plugin
 import logging
 
 print("### [ModScanPlugin] Log initialization ###")
