@@ -13,6 +13,9 @@ EVENT_ID = "event.id"
 IP_SRC = "event.network.ip_src"
 IP_DST = "event.network.ip_dst"
 
+EXPIRATION = 30
+THRESHOLD = 5
+
 print("### [ModScanPlugin] Log initialization ###")
 logging.basicConfig(filename='~/modscanplugin.log',level=logging.DEBUG)
 
@@ -27,7 +30,7 @@ class ModScanPlugin(Plugin):
 		source = _getDataByMeaning(IP_SRC)
 		dest = _getDataByMeaning(IP_DST)
 		
-		ctx = Context(("PORT_SCAN_STORM",source,dest), { "expire": 30, "threshold": 5, "alert_on_expire": True }, update = True, idmef = idmef)
+		ctx = Context(("PORT_SCAN_STORM",source,dest), { "expire": EXPIRATION, "threshold": THRESHOLD, "alert_on_expire": True }, update = True, idmef = idmef)
 		if ctx.getUpdateCount() == 0:
 			ctx.set("alert.correlation_alert.name", "Port Scan Storm Detected")
 			ctx.set("alert.classification.text", "PortScanStorm")
