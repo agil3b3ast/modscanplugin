@@ -10,6 +10,9 @@ PORT_SCAN_MONITORING = "Port Scan Monitoring"
 
 EVENT_ID = "event.id"
 
+IP_SRC = "event.network.ip_src"
+IP_DST = "event.network.ip_dst"
+
 print("### [ModScanPlugin] Log initialization ###")
 logging.basicConfig(filename='~/modscanplugin.log',level=logging.DEBUG)
 
@@ -20,15 +23,16 @@ class ModScanPlugin(Plugin):
         #print idmef
         #logging.debug(str(idmef.get("alert.classification.text")))
         #logging.debug('\n\n\n')
-        source = IDMEF.get("alert.source(*).node.address(*).address")
+        #source = IDMEF.get("alert.source(*).node.address(*).address")
+		source = _getDataByMeaning(IP_SRC)
+		dest = _getDataByMeaning(IP_DST)
 		
-		for saddr in source:
-			ctx = Context("PORT_SCAN_STORM", { "expire": 30, "threshold": 5, "alert_on_expire": True }, update = True, idmef = idmef)
-			if ctx.getUpdateCount() == 0:
-				ctx.set("alert.correlation_alert.name", "Port Scan Storm Detected")
-				ctx.set("alert.classification.text", "PortScanStorm")
-				ctx.set("alert.assessment.impact.severity", "high")		
-	
+		ctx = Context(("PORT_SCAN_STORM",source,dest), { "expire": 30, "threshold": 5, "alert_on_expire": True }, update = True, idmef = idmef)
+		if ctx.getUpdateCount() == 0:
+			ctx.set("alert.correlation_alert.name", "Port Scan Storm Detected")
+			ctx.set("alert.classification.text", "PortScanStorm")
+			ctx.set("alert.assessment.impact.severity", "high")		
+
     def _getDataByMeaning(self,meaning):
 	    meanings = IDMEF.get("alert.additional_data(*).meaning")
 		m_len = len(meanings)
