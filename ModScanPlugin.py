@@ -39,7 +39,7 @@ class ModScanPlugin(Plugin):
 	def _getDataByMeaning(self,idmef,meaning):
 		meanings = idmef.get("alert.additional_data(*).meaning")
 		m_len = len(meanings)
-		for m in xrange(m_len):
+		for m in range(m_len):
 			if meanings[m] == meaning:
 				to_search = "alert.additional_data({}).data".format(m)
 				d = idmef.get(to_search)
