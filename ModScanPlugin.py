@@ -27,8 +27,8 @@ class ModScanPlugin(Plugin):
 		#logging.debug(str(idmef.get("alert.classification.text")))
 		#logging.debug('\n\n\n')
 		#source = IDMEF.get("alert.source(*).node.address(*).address")
-		source = _getDataByMeaning(IP_SRC)
-		dest = _getDataByMeaning(IP_DST)
+		source = self._getDataByMeaning(IP_SRC)
+		dest = self._getDataByMeaning(IP_DST)
 		
 		ctx = Context(("PORT_SCAN_STORM",source,dest), { "expire": EXPIRATION, "threshold": THRESHOLD, "alert_on_expire": True }, update = True, idmef = idmef)
 		if ctx.getUpdateCount() == 0:
@@ -47,7 +47,7 @@ class ModScanPlugin(Plugin):
 		return None	
 
 	def run(self, idmef):
-		ev_id = _getDataByMeaning(EVENT_ID)		
+		ev_id = self._getDataByMeaning(EVENT_ID)		
 		if ev_id is None:
 			return		
 		if  ev_id == ID_PORT_SCAN_DETECTED:
