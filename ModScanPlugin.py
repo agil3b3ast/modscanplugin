@@ -23,10 +23,10 @@ logging.basicConfig(filename='~/modscanplugin.log',level=logging.DEBUG)
 class ModScanPlugin(Plugin):
     
 	def _PortScan(self, idmef):
-        #print idmef
-        #logging.debug(str(idmef.get("alert.classification.text")))
-        #logging.debug('\n\n\n')
-        #source = IDMEF.get("alert.source(*).node.address(*).address")
+        	#print idmef
+		#logging.debug(str(idmef.get("alert.classification.text")))
+		#logging.debug('\n\n\n')
+		#source = IDMEF.get("alert.source(*).node.address(*).address")
 		source = _getDataByMeaning(IP_SRC)
 		dest = _getDataByMeaning(IP_DST)
 		
@@ -36,16 +36,19 @@ class ModScanPlugin(Plugin):
 			ctx.set("alert.classification.text", "PortScanStorm")
 			ctx.set("alert.assessment.impact.severity", "high")		
 
-    def _getDataByMeaning(self,meaning):
-	    meanings = IDMEF.get("alert.additional_data(*).meaning")
+	def _getDataByMeaning(self,meaning):
+		meanings = IDMEF.get("alert.additional_data(*).meaning")
 		m_len = len(meanings)
 		for m in xrange(m_len):
 			if meanings[m] == meaning:
-			    to_search = "alert.additional_data({}).data".format(m)
+				to_search = "alert.additional_data({}).data".format(m)
 				d = IDMEF.get(to_search)
-                return d
+				return d
 		return None	
 
-    def run(self, idmef):
-		if  _getDataByMeaning(EVENT_ID) == ID_PORT_SCAN_DETECTED:
+	def run(self, idmef):
+		ev_id = _getDataByMeaning(EVENT_ID)		
+		if ev_id is None:
+			return		
+		if  ev_id == ID_PORT_SCAN_DETECTED:
 			self._PortScan(idmef)			
