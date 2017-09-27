@@ -1,5 +1,6 @@
 from preludecorrelator.pluginmanager import Plugin
 from preludecorrelator.idmef import IDMEF
+from preludecorrelator.context import Context
 import logging
 
 ID_PORT_SCAN_DETECTED = "D1"
